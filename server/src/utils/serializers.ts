@@ -1,3 +1,4 @@
+import type { TaskPriority, TaskStatus } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { TASK_PRIORITY_LABELS, TASK_STATUS_LABELS } from "../constants/index.js";
 import { startOfToday } from "./format.js";
@@ -56,11 +57,18 @@ export const taskDetailInclude = Prisma.validator<Prisma.TaskInclude>()({
   }
 });
 
-function isOverdue(task: { dueDate: Date | null; status: string }) {
+type SerializableTask = {
+  dueDate: Date | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  [key: string]: unknown;
+};
+
+function isOverdue(task: { dueDate: Date | null; status: TaskStatus }) {
   return Boolean(task.dueDate && task.dueDate < startOfToday() && task.status !== "DONE");
 }
 
-export function serializeTask(task: any) {
+export function serializeTask<T extends SerializableTask>(task: T) {
   return {
     ...task,
     statusLabel: TASK_STATUS_LABELS[task.status],

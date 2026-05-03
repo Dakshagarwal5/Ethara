@@ -159,7 +159,7 @@ export async function updateTask(user: CurrentUser, taskId: string, input: TaskI
       throw new ApiError(403, "You can only update the status of tasks assigned to you");
     }
 
-    return updateTaskStatus(user, taskId, input.status);
+    return updateTaskStatus(user, taskId, input.status!);
   }
 
   if (input.assigneeId) {
