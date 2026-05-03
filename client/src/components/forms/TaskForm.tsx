@@ -95,7 +95,7 @@ export function TaskForm({
           <select value={status} onChange={(event) => setStatus(event.target.value as TaskStatus)}>
             {statusOptions.map((option) => (
               <option key={option} value={option}>
-                {option.replaceAll("_", " ")}
+                {option.replace(/_/g, " ")}
               </option>
             ))}
           </select>
